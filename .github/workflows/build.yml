@@ -1,0 +1,22 @@
+name: Build addon
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 cyberware_addon_all_in_one.py
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.1.1
+      - run: gradle build --no-daemon -p cyberware-slots-addon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cyberware-slots-addon
+          path: cyberware-slots-addon/build/libs/*.jar
